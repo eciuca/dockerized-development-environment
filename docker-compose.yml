@@ -1,0 +1,10 @@
+version: "2"
+services:
+  jenkins:
+    image: jenkins
+    ports:
+     - "8180:8080"
+    volumes: 
+     - ~/.docker/setup/jenkins/jenkins_home:/var/jenkins_home
+    environment:
+     - JENKINS_OPTS=--prefix=/jenkins
