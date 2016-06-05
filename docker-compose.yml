@@ -16,3 +16,9 @@ services:
      - ~/.docker/setup/nexus/sonatype-work:/var/sonatype-work
     environment:
      - CONTEXT_PATH=/nexus
+  nginx:
+    image: nginx
+    ports:
+     - "80:80"
+    volumes:
+     - ~/.docker/setup/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
