@@ -8,3 +8,11 @@ services:
      - ~/.docker/setup/jenkins/jenkins_home:/var/jenkins_home
     environment:
      - JENKINS_OPTS=--prefix=/jenkins
+  nexus:
+    image: sonatype/nexus:oss
+    ports:
+     - "8181:8081"
+    volumes:
+     - ~/.docker/setup/nexus/sonatype-work:/var/sonatype-work
+    environment:
+     - CONTEXT_PATH=/nexus
