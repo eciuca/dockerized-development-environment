@@ -9,25 +9,25 @@ services:
     environment:
      - JENKINS_OPTS=--prefix=/jenkins
   nexus:
-    image: sonatype/nexus:oss
+    image: sonatype/nexus3
     ports:
      - "8081:8081"
     volumes:
-     - ../nexus/sonatype-work:/var/sonatype-work
-    environment:
-     - CONTEXT_PATH=/nexus
+     - ../nexus/nexus-data:/nexus-data
+     - ../nexus/etc/org.sonatype.nexus.cfg:/opt/sonatype/nexus/etc/org.sonatype.nexus.cfg:ro
+     
   nginx:
     image: nginx
     ports:
      - "3334:80"
     volumes:
-     - ../nginx/html:/usr/share/nginx/html
+     - ../nginx/html:/usr/share/nginx/html:ro
   haproxy:
     image: million12/haproxy
     ports:
      - "80:80"
     volumes:
-     - ../haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg
+     - ../haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg:ro
     environment:
      - GATEWAY_IP=172.17.0.1
   elk:
@@ -38,4 +38,4 @@ services:
      - "5044:5044"
      - "5000:5000"
     volumes:
-     - ../elk/kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
+     - ../elk/kibana/config/kibana.yml:/opt/kibana/config/kibana.yml:ro
