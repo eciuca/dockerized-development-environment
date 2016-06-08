@@ -19,9 +19,17 @@ services:
   nginx:
     image: nginx
     ports:
+     - "3334:80"
+    volumes:
+     - ../nginx/html:/usr/share/nginx/html
+  haproxy:
+    image: million12/haproxy
+    ports:
      - "80:80"
     volumes:
-     - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+     - ../haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg
+    environment:
+     - GATEWAY_IP=172.17.0.1
   elk:
     image: sebp/elk
     ports:
@@ -29,3 +37,5 @@ services:
      - "9200:9200"
      - "5044:5044"
      - "5000:5000"
+    volumes:
+     - ../elk/kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
