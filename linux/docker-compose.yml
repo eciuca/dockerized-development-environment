@@ -3,7 +3,7 @@ services:
   jenkins:
     image: jenkins
     ports:
-     - "8080:8080"
+     - "8082:8080"
     volumes: 
      - ../jenkins/jenkins_home:/var/jenkins_home
     environment:
