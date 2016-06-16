@@ -1,30 +1,47 @@
 version: "2"
+
+volumes:
+  gocd-server-volume: {}
+  jenkins-volume: {}
+  nexus-volume: {}
+  
 services:
+  gocd-server:
+    image: gocd/gocd-server
+    ports:
+     - "8153:8153"
+    volumes:
+     - gocd-server-volume:/etc/go
+     - gocd-server-volume:/var/lib/go-server
+     - gocd-server-volume:/var/log/go-server
+
   jenkins:
     build: ../jenkins/build
     image: jenkins
     ports:
      - "8082:8080"
     volumes: 
-     - ../jenkins/jenkins_home:/var/jenkins_home
+     - jenkins-volume:/var/jenkins_home
      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
      - JENKINS_OPTS=--prefix=/jenkins
+
   nexus:
     image: sonatype/nexus3
     ports:
      - "8081:8081"
      - "8444:8444"
     volumes:
-     - ../nexus/nexus-data:/nexus-data
-     - ../nexus/etc/org.sonatype.nexus.cfg:/opt/sonatype/nexus/etc/org.sonatype.nexus.cfg:ro
-     
+     - nexus-volume:/nexus-data
+     - ../nexus/etc/org.sonatype.nexus.cfg:/opt/sonatype/nexus/etc/org.sonatype.nexus.cfg:ro     
+
   nginx:
     image: nginx
     ports:
      - "3334:80"
     volumes:
      - ../nginx/html:/usr/share/nginx/html:ro
+
   haproxy:
     image: million12/haproxy
     ports:
@@ -33,6 +50,7 @@ services:
      - ../haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg:ro
     environment:
      - GATEWAY_IP=172.17.0.1
+
   elk:
     image: sebp/elk
     ports:
