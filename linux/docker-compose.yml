@@ -1,17 +1,20 @@
 version: "2"
 services:
   jenkins:
+    build: ../jenkins/build
     image: jenkins
     ports:
      - "8082:8080"
     volumes: 
      - ../jenkins/jenkins_home:/var/jenkins_home
+     - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
      - JENKINS_OPTS=--prefix=/jenkins
   nexus:
     image: sonatype/nexus3
     ports:
      - "8081:8081"
+     - "8444:8444"
     volumes:
      - ../nexus/nexus-data:/nexus-data
      - ../nexus/etc/org.sonatype.nexus.cfg:/opt/sonatype/nexus/etc/org.sonatype.nexus.cfg:ro
