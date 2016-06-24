@@ -16,17 +16,13 @@ services:
      - gocd-server-volume:/var/lib/go-server
      - gocd-server-volume:/var/log/go-server
   gocd-agent-updated:
-    image: gocd-agent-jdk8-maven3
+    image: eciuca/gocd-agent-jdk8-maven3
     links:
      - gocd-server:go-server
     volumes:
      - gocd-agent-volume:/var/lib/go-agent
      - gocd-agent-volume:/var/go/.ssh
      - /var/run/docker.sock:/var/run/docker.sock:ro
-  gocd-agent:
-    image: gocd/gocd-agent
-    links:
-     - gocd-server:go-server
   jenkins:
     build: ../jenkins/build
     image: jenkins
