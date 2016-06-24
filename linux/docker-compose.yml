@@ -15,6 +15,7 @@ services:
      - gocd-server-volume:/etc/go
      - gocd-server-volume:/var/lib/go-server
      - gocd-server-volume:/var/log/go-server
+  
   gocd-agent-updated:
     image: eciuca/gocd-agent-jdk8-maven3
     links:
@@ -23,16 +24,6 @@ services:
      - gocd-agent-volume:/var/lib/go-agent
      - gocd-agent-volume:/var/go/.ssh
      - /var/run/docker.sock:/var/run/docker.sock:ro
-  jenkins:
-    build: ../jenkins/build
-    image: jenkins
-    ports:
-     - "8082:8080"
-    volumes: 
-     - jenkins-volume:/var/jenkins_home
-     - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-     - JENKINS_OPTS=--prefix=/jenkins
 
   nexus:
     image: sonatype/nexus3
