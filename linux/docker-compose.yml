@@ -20,9 +20,10 @@ services:
     image: eciuca/gocd-agent-jdk8-maven3
     links:
      - gocd-server:go-server
+     - nexus:nexus
     volumes:
      - gocd-agent-volume:/var/lib/go-agent
-     - gocd-agent-volume:/var/go/.ssh
+     - gocd-agent-volume:/var/go
      - /var/run/docker.sock:/var/run/docker.sock:ro
 
   nexus:
@@ -57,5 +58,8 @@ services:
      - "9200:9200"
      - "5044:5044"
      - "5000:5000"
+     - "12201:12201"
     volumes:
      - ../elk/kibana/config/kibana.yml:/opt/kibana/config/kibana.yml:ro
+     - ../elk/logstash/03-gelf-input.conf:/etc/logstash/conf.d/03-gelf-input.conf:ro
+     - ../elk/logstash/30-output.conf:/etc/logstash/conf.d/30-output.conf:ro
