@@ -1,0 +1,43 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"                                        
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"                                   
+        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                              
+        http://maven.apache.org/xsd/settings-1.0.0.xsd">                                        
+                                                                                                
+<localRepository>${user.home}/go_user_maven_repo</localRepository>
+<servers>                                                                                       
+   <server>                                                                                     
+     <id>docker-internal</id>                                                                   
+     <username>admin</username>                                                                 
+     <password>admin123</password>                                                              
+     <configuration>                                                                            
+       <email>emanuel.ciuca@gmail.com</email>                                                   
+     </configuration>                                                                           
+   </server>                                                                                    
+   <server>                                                                                     
+      <id>nexus-snapshots</id>                                                                  
+      <username>admin</username>                                                                
+      <password>admin123</password>                                                             
+   </server>                                                                                    
+   <server>                                                                                     
+      <id>nexus-releases</id>                                                                   
+      <username>admin</username>                                                                
+      <password>admin123</password>                                                             
+   </server>                                                                                    
+</servers>                                                                                      
+                                                                                                
+<profiles>                                                                                      
+   <profile>                                                                                    
+     <id>pom-properties</id>                                                                            
+     <properties>                                                                               
+       <docker-server-id>docker-internal</docker-server-id>                                     
+       <docker-registry>localhost:8444</docker-registry>                                        
+       <nexus-url>http://nexus:8081/nexus</nexus-url>
+    </properties>                                                                               
+   </profile>                                                                                   
+</profiles>
+
+<activeProfiles>
+  <activeProfile>pom-properties</activeProfile>
+</activeProfiles>                                                                                     
+                                                                                                
+</settings> 

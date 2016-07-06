@@ -1,10 +1,9 @@
 version: "2"
 
 volumes:
-  gocd-server-volume: {}
-  gocd-agent-volume: {}
-  jenkins-volume: {}
-  nexus-volume: {}
+  dev-env-setup-gocd-server-volume: {}
+  dev-env-setup-gocd-agent-volume: {}
+  dev-env-setup-nexus-volume: {}
   
 services:
   gocd-server:
@@ -12,9 +11,9 @@ services:
     ports:
      - "8153:8153"
     volumes:
-     - gocd-server-volume:/etc/go
-     - gocd-server-volume:/var/lib/go-server
-     - gocd-server-volume:/var/log/go-server
+     - dev-env-setup-gocd-server-volume:/etc/go
+     - dev-env-setup-gocd-server-volume:/var/lib/go-server
+     - dev-env-setup-gocd-server-volume:/var/log/go-server
   
   gocd-agent-updated:
     image: eciuca/gocd-agent-jdk8-maven3
@@ -22,9 +21,10 @@ services:
      - gocd-server:go-server
      - nexus:nexus
     volumes:
-     - gocd-agent-volume:/var/lib/go-agent
-     - gocd-agent-volume:/var/go
+     - dev-env-setup-gocd-agent-volume:/var/lib/go-agent
+     - dev-env-setup-gocd-agent-volume:/var/go
      - /var/run/docker.sock:/var/run/docker.sock:ro
+     - ../go/agent/settings.xml:/var/go/.m2/settings.xml:ro
 
   nexus:
     image: sonatype/nexus3
@@ -32,7 +32,7 @@ services:
      - "8081:8081"
      - "8444:8444"
     volumes:
-     - nexus-volume:/nexus-data
+     - dev-env-setup-nexus-volume:/nexus-data
      - ../nexus/etc/org.sonatype.nexus.cfg:/opt/sonatype/nexus/etc/org.sonatype.nexus.cfg:ro     
 
   nginx:

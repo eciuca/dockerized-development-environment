@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html>
    <head>
+      <style>
+        ul li {
+           list-style-type: none;
+        }
+      </style>
       <title>HAProxy Default Page</title>
    </head>
    <body>
       <h1>HAProxy Default Page</h1>
       <p>This is the page served by nginx proxied by the default backend configured in HAProxy </p>
+      <h2>Development environment links<h2>
+      <ul>
+         <li><a target="_blank" href="/nexus">Nexus</a></li>
+         <li><a target="_blank" href="/go">Go</a></li>
+         <li><a target="_blank" href="/app/kibana">Kibana</a></li>
+         <li><a target="_blank" href="/elasticsearch/_search?pretty">Elasticsearch</a></li>
+      </ul>
    </body>
 </html>
