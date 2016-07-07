@@ -21,6 +21,18 @@ Go into the dev-env-setup directory and run the linux configuration
   $ cd dev-env-setup
   $ docker-compose -f linux/docker-compose.yml up -d
   ```
+If you run `docker ps` you should see something like this:
+```
+CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                                                                                                                                NAMES
+2444b47aa2bb        eciuca/gocd-agent-jdk8-maven3   "/sbin/my_init"          8 minutes ago       Up 8 minutes                                                                                                                                             linux_gocd-agent-updated_1
+643257cce4c4        nginx                           "nginx -g 'daemon off"   9 minutes ago       Up 8 minutes        443/tcp, 0.0.0.0:3334->80/tcp                                                                                                        linux_nginx_1
+ea83591431de        sonatype/nexus3                 "/bin/sh -c 'bin/nexu"   9 minutes ago       Up 9 minutes        0.0.0.0:8081->8081/tcp, 0.0.0.0:8444->8444/tcp                                                                                       linux_nexus_1
+a7b40c01941e        gocd/gocd-server                "/sbin/my_init"          9 minutes ago       Up 9 minutes        0.0.0.0:8153->8153/tcp, 8154/tcp                                                                                                     linux_gocd-server_1
+e3291d38ece5        sebp/elk                        "/usr/local/bin/start"   9 minutes ago       Up 9 minutes        0.0.0.0:5000->5000/tcp, 0.0.0.0:5044->5044/tcp, 0.0.0.0:5601->5601/tcp, 0.0.0.0:9200->9200/tcp, 9300/tcp, 0.0.0.0:12201->12201/udp   linux_elk_1
+f577c13749d6        million12/haproxy               "/bootstrap.sh"          9 minutes ago       Up 9 minutes        0.0.0.0:80->80/tcp, 443/tcp                                                                                                          linux_haproxy_1
+```
+
+Wait some time until all the applications are initialized.
 
 ### Access the default page
 
@@ -34,11 +46,34 @@ Go to `http://localhost/home` (HAProxy is set to listen on port 80, if you want 
   password: admin123
   ```
 
+2. Go to Server administration and configuration> Repositories 
+
+3. Create docker-internal repository:
+  - Click on the <b>Create repository</b> button 
+  - Create a new docker (hosted) repository named <b>docker-internal</b>
+  - Tick the HTTP box from Repository Connectors and set the port to <b>8444</b> (same as in the file `go/agent/settings.xml`)
+  - Select the <b>default</b> option for the blob store and 
+  - Click <b>Create repository</b>
+
+4. Create docker-hub repository
+  - Click on the <b>Create repository</b> button
+  - Create a new docker (proxy) repository named <b>docker-hub</b>
+  - Tick the <b>Allow clients to use the V1 API to interact with this Repository.</b> checkbox under Docker Registry API Support > Enable Docker V1 API
+  - Put `https://registry-1.docker.io` in Proxy > Remote storage
+  - Select the <b>default</b> option for the blob store
+  - Click <b>Create repository</b>
+
+5. Create docker-public group repository
+  - Click on the <b>Create repository</b> button
+  - Create a new docker (group) repository named <b>docker-public</b>
+  - Tick the <b>Allow clients to use the V1 API to interact with this Repository.</b> checkbox under Docker Registry API Support > Enable Docker V1 API
+  - Select the <b>default</b> option for the blob store 
+  - Add docker-hub and docker-internal in the <b>Members</b> list
+  - Click <b>Create repository</b>.
+
 ### Configure Go Server and Agent
 
-1. Go to Server administration and configuration> Repository> Repositories and create a new docker (hosted) repository named <b>docker-internal</b>, tick the HTTP box from Repository Connectors and set the port to <b>8444</b> (same as in the file `go/agent/settings.xml`), select the <b>default</b> option for the blob store and click <b>Save</b>
-
-2. Go to `http://localhost` and click the <b>Go</b> hyperlink (`http://localhost/go`). Go to `Admin > Config XML`, click the <b>Edit</b> button and paste the contents of the file `go/server/partial-cruise-config.xml` between the <b>server</b> and <b>agent</b> XML elements (the gocd-agent from the docker-compose.yml should have been already discovered).
+1. Go to `http://localhost` and click the <b>Go</b> hyperlink (`http://localhost/go`). Go to `Admin > Config XML`, click the <b>Edit</b> button and paste the contents of the file `go/server/partial-cruise-config.xml` between the <b>server</b> and <b>agent</b> XML elements (the gocd-agent from the docker-compose.yml should have been already discovered).
 
 ### Run a dropwizard-seed image
 
