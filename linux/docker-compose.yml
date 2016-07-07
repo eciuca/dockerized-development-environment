@@ -62,5 +62,5 @@ services:
     volumes:
      - ../elk/kibana/config/kibana.yml:/opt/kibana/config/kibana.yml:ro
      - ../elk/logstash/03-gelf-input.conf:/etc/logstash/conf.d/03-gelf-input.conf:ro
-     - ../elk/logstash/12-java.conf:/etc/logstash/conf.d/12-java.conf:ro
+     - ../elk/logstash/12-dropwizard.conf:/etc/logstash/conf.d/12-dropwizard.conf:ro
      - ../elk/logstash/30-output.conf:/etc/logstash/conf.d/30-output.conf:ro
