@@ -36,7 +36,7 @@ Wait some time until all the applications are initialized.
 
 ### Access the default page
 
-Go to `http://localhost/home` (HAProxy is set to listen on port 80, if you want you can change it from docker-compose.yml)
+Go to <a target="_blank" href="http://localhost/home">http://localhost/home</a> (HAProxy is set to listen on port 80, if you want you can change it from docker-compose.yml)
 
 ### Configure Nexus
 
@@ -73,24 +73,44 @@ Go to `http://localhost/home` (HAProxy is set to listen on port 80, if you want 
 
 ### Configure Go Server and Agent
 
-1. Go to `http://localhost` and click the <b>Go</b> hyperlink (`http://localhost/go`). Go to `Admin > Config XML`, click the <b>Edit</b> button and paste the contents of the file `go/server/partial-cruise-config.xml` between the <b>server</b> and <b>agent</b> XML elements (the gocd-agent from the docker-compose.yml should have been already discovered).
+1. Access the server
+  - Go to <a target="_blank" href="http://localhost">http://localhost</a>
+  - Click the <b>Go</b> hyperlink (<a target="_blank" href="http://localhost/go">http://localhost/go</a>)
+
+2. Apply the configuration
+  - Go to `Admin > Config XML`
+  - Click the <b>Edit</b> button 
+  - Paste the contents of the file `go/server/partial-cruise-config.xml` between the <b>server</b> and <b>agent</b> XML elements (the gocd-agent from the docker-compose.yml should have been already discovered).
+  - Add an `<physical>` element under `cruise\environments\environment\agents` (see commented example) with the uuid of the discovered go agent from `cruise\agents\agent`
+  - Click <b>Save</b>
+
+If you go to the <b>Pipelines</b> view you will see the <b>Parent</b> and <b>Dropwizard</b> pipelines under the <b>eciuca</b> group.
 
 ### Run a dropwizard-seed image
 
-1. After the gocd-agent finishes successfully the build run the following command to run the newly build docker image
-  `$ docker run -p 8888:8888 --log-driver=gelf --log-opt gelf-address=udp://$(docker inspect --format '{{ .NetworkSettings.Networks.linux_default.IPAddress }}' linux_elk_1):12201 --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" localhost:8444/com.github.eciuca/dropwizard-seed-local`
+1. After the <b>gocd-agent finishes successfully</b> the build run the following command to run the newly build docker image
+```
+$ docker run -p 8888:8888 --log-driver=gelf --log-opt gelf-address=udp://$(docker inspect --format '{{ .NetworkSettings.Networks.linux_default.IPAddress }}' linux_elk_1):12201 --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" localhost:8444/com.github.eciuca/dropwizard-seed-local
+```
 
 2. Go to `http://localhost:8888/hello-world/user1` and you should see the following message: `Hello, user1!`
 
 ### Access ElasticSearch API
 
-If you make this http request to the elasticsearch node you should see the logs there. Here's the request (you can access from the HAProxy default page): `http://localhost/elasticsearch/_search?pretty`
+If you make this http request to the elasticsearch node you should see the logs there. Here's the request (you can access from the HAProxy default page): <a target="_blank" href="http://localhost/elasticsearch/_search?pretty">http://localhost/elasticsearch/_search?pretty</a>
 
 ### Configure Kibana
 
-1. Now if you go to kibana (`http://localhost/app/kibana`) it will redirect you to the Configure an index pattern page. In the index name or patter put <b>gelf_logs</b> and after the <b>Time-field name</b> refreshes select <b>@timestamp</b> from the dropdown and then click <b>Create</b>.
+1. Access the application:
+  - Go to <a target="_blank" href="http://localhost/app/kibana">http://localhost/app/kibana</a> 
+  - You will be redirected to the <b>Configure an index pattern</b> page. 
 
-2. If you click now on the <b>Discover</b> navigation button you will be able to see same logs that you have seen at point 9
+2. Configure an index pattern
+  - In the index name or patter put <b>gelf_logs</b>
+  - After the <b>Time-field name</b> refreshes select <b>@timestamp</b> from the dropdown
+  - Click <b>Create</b>.
+
+3. If you click now on the <b>Discover</b> navigation button you will be able to see same logs that you have seen when you accessed ElasticSearch earlier
 
 # Getting started for windows
 
