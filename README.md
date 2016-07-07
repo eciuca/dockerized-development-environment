@@ -93,7 +93,7 @@ If you go to the <b>Pipelines</b> view you will see the <b>Parent</b> and <b>Dro
 $ docker run -p 8888:8888 --log-driver=gelf --log-opt gelf-address=udp://$(docker inspect --format '{{ .NetworkSettings.Networks.linux_default.IPAddress }}' linux_elk_1):12201 --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" localhost:8444/com.github.eciuca/dropwizard-seed-local
 ```
 
-2. Go to `http://localhost:8888/hello-world/user1` and you should see the following message: `Hello, user1!`
+2. Go to <a target="_blank" href="http://localhost:8888/hello-world/user1">http://localhost:8888/hello-world/user1</a>` and you should see the following message: `Hello, user1!`
 
 ### Access ElasticSearch API
 
