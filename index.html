@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Development-environment-docker by eciuca</title>
+    <title>development-environment-docker by eciuca</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,7 +11,7 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Development-environment-docker</h1>
+      <h1 class="project-name">development-environment-docker</h1>
       <h2 class="project-tagline">GoCD, ELK Stack, Nexus 3, HAProxy and Nginx in a Docker Compose script for fast development environment setup</h2>
       <a href="https://github.com/eciuca/development-environment-docker" class="btn">View on GitHub</a>
       <a href="https://github.com/eciuca/development-environment-docker/zipball/master" class="btn">Download .zip</a>
@@ -19,20 +19,205 @@
     </section>
 
     <section class="main-content">
-      <h3>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+      <h1>
+<a id="development-environment-docker" class="anchor" href="#development-environment-docker" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>development-environment-docker</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.</p>
+<p>A simple and fast way to create a development environment with GoCD, ELK Stack, Nexus 3, HAProxy and Nginx in a Docker Compose script for fast setup.</p>
+
+<p>At the end of this Readme you will have:</p>
+
+<ul>
+<li>A GoCD Server with 1 GoCD Agent and 2 pipelines ready to build the dropwizard-seed project</li>
+<li>A Nexus 3 repository setup with docker and maven repositories</li>
+<li>An ELK Stack, which captures all logs from the dropwizard-seed project (if started as show in the guide)</li>
+<li>A HAProxy container for proxying your containers</li>
+<li>A Nginx instance for serving static content (the default HAProxy page)</li>
+</ul>
+
+<h1>
+<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prerequisites</h1>
+
+<ul>
+<li>Docker</li>
+<li>Oracle VM VirtualBox Manager (if running on Windows or OSX)</li>
+</ul>
+
+<h1>
+<a id="getting-started-for-linux" class="anchor" href="#getting-started-for-linux" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting started for Linux</h1>
 
 <h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a id="clone-the-repository" class="anchor" href="#clone-the-repository" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Clone the repository</h3>
 
-<p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
+<pre><code>  $ git clone https://github.com/eciuca/dev-env-setup.git
+</code></pre>
 
 <h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating pages manually</h3>
+<a id="run-the-containers" class="anchor" href="#run-the-containers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run the containers</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>Go into the dev-env-setup directory and run the linux configuration</p>
+
+<pre><code>  $ cd dev-env-setup
+  $ docker-compose -f linux/docker-compose.yml up -d
+</code></pre>
+
+<p>If you run <code>docker ps</code> you should see something like this:</p>
+
+<pre><code>CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                                                                                                                                NAMES
+2444b47aa2bb        eciuca/gocd-agent-jdk8-maven3   "/sbin/my_init"          8 minutes ago       Up 8 minutes                                                                                                                                             linux_gocd-agent-updated_1
+643257cce4c4        nginx                           "nginx -g 'daemon off"   9 minutes ago       Up 8 minutes        443/tcp, 0.0.0.0:3334-&gt;80/tcp                                                                                                        linux_nginx_1
+ea83591431de        sonatype/nexus3                 "/bin/sh -c 'bin/nexu"   9 minutes ago       Up 9 minutes        0.0.0.0:8081-&gt;8081/tcp, 0.0.0.0:8444-&gt;8444/tcp                                                                                       linux_nexus_1
+a7b40c01941e        gocd/gocd-server                "/sbin/my_init"          9 minutes ago       Up 9 minutes        0.0.0.0:8153-&gt;8153/tcp, 8154/tcp                                                                                                     linux_gocd-server_1
+e3291d38ece5        sebp/elk                        "/usr/local/bin/start"   9 minutes ago       Up 9 minutes        0.0.0.0:5000-&gt;5000/tcp, 0.0.0.0:5044-&gt;5044/tcp, 0.0.0.0:5601-&gt;5601/tcp, 0.0.0.0:9200-&gt;9200/tcp, 9300/tcp, 0.0.0.0:12201-&gt;12201/udp   linux_elk_1
+f577c13749d6        million12/haproxy               "/bootstrap.sh"          9 minutes ago       Up 9 minutes        0.0.0.0:80-&gt;80/tcp, 443/tcp                                                                                                          linux_haproxy_1
+</code></pre>
+
+<p>Wait some time until all the applications are initialized.</p>
+
+<h3>
+<a id="access-the-default-page" class="anchor" href="#access-the-default-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Access the default page</h3>
+
+<p>Go to <a href="http://localhost/home">http://localhost/home</a> (HAProxy is set to listen on port 80, if you want you can change it from docker-compose.yml)</p>
+
+<h3>
+<a id="configure-nexus" class="anchor" href="#configure-nexus" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure Nexus</h3>
+
+<ol>
+<li>
+<p>Click on the Nexus hyperlink and log in as administrator using the following credentials:</p>
+
+<pre><code>username: admin
+password: admin123
+</code></pre>
+</li>
+<li><p>Go to Server administration and configuration&gt; Repositories </p></li>
+<li>
+<p>Create docker-internal repository:</p>
+
+<ul>
+<li>Click on the <b>Create repository</b> button </li>
+<li>Create a new docker (hosted) repository named <b>docker-internal</b>
+</li>
+<li>Tick the HTTP box from Repository Connectors and set the port to <b>8444</b> (same as in the file <code>go/agent/settings.xml</code>)</li>
+<li>Select the <b>default</b> option for the blob store and </li>
+<li>Click <b>Create repository</b>
+</li>
+</ul>
+</li>
+<li>
+<p>Create docker-hub repository</p>
+
+<ul>
+<li>Click on the <b>Create repository</b> button</li>
+<li>Create a new docker (proxy) repository named <b>docker-hub</b>
+</li>
+<li>Tick the <b>Allow clients to use the V1 API to interact with this Repository.</b> checkbox under Docker Registry API Support &gt; Enable Docker V1 API</li>
+<li>Put <code>https://registry-1.docker.io</code> in Proxy &gt; Remote storage</li>
+<li>Select the <b>default</b> option for the blob store</li>
+<li>Click <b>Create repository</b>
+</li>
+</ul>
+</li>
+<li>
+<p>Create docker-public group repository</p>
+
+<ul>
+<li>Click on the <b>Create repository</b> button</li>
+<li>Create a new docker (group) repository named <b>docker-public</b>
+</li>
+<li>Tick the <b>Allow clients to use the V1 API to interact with this Repository.</b> checkbox under Docker Registry API Support &gt; Enable Docker V1 API</li>
+<li>Select the <b>default</b> option for the blob store </li>
+<li>Add docker-hub and docker-internal in the <b>Members</b> list</li>
+<li>Click <b>Create repository</b>.</li>
+</ul>
+</li>
+</ol>
+
+<h3>
+<a id="configure-go-server-and-agent" class="anchor" href="#configure-go-server-and-agent" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure Go Server and Agent</h3>
+
+<ol>
+<li>
+<p>Access the server</p>
+
+<ul>
+<li>Go to <a href="http://localhost">http://localhost</a>
+</li>
+<li>Click the <b>Go</b> hyperlink (<a href="http://localhost/go">http://localhost/go</a>)</li>
+</ul>
+</li>
+<li>
+<p>Apply the configuration</p>
+
+<ul>
+<li>Go to <code>Admin &gt; Config XML</code>
+</li>
+<li>Click the <b>Edit</b> button </li>
+<li>Paste the contents of the file <code>go/server/partial-cruise-config.xml</code> between the <b>server</b> and <b>agent</b> XML elements (the gocd-agent from the docker-compose.yml should have been already discovered).</li>
+<li>Add an <code>&lt;physical&gt;</code> element under <code>cruise\environments\environment\agents</code> (see commented example) with the uuid of the discovered go agent from <code>cruise\agents\agent</code>
+</li>
+<li>Click <b>Save</b>
+</li>
+</ul>
+</li>
+</ol>
+
+<p>If you go to the <b>Pipelines</b> view you will see the <b>Parent</b> and <b>Dropwizard</b> pipelines under the <b>eciuca</b> group.</p>
+
+<h3>
+<a id="run-a-dropwizard-seed-image" class="anchor" href="#run-a-dropwizard-seed-image" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run a dropwizard-seed image</h3>
+
+<ol>
+<li>After the <b>gocd-agent finishes successfully</b> the build run the following command to run the newly build docker image</li>
+</ol>
+
+<pre><code>$ docker run -p 8888:8888 --log-driver=gelf --log-opt gelf-address=udp://$(docker inspect --format '{{ .NetworkSettings.Networks.linux_default.IPAddress }}' linux_elk_1):12201 --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" localhost:8444/com.github.eciuca/dropwizard-seed-local
+</code></pre>
+
+<ol>
+<li>Go to <a href="http://localhost:8888/hello-world/user1">http://localhost:8888/hello-world/user1</a><code>and you should see the following message:</code>Hello, user1!`</li>
+</ol>
+
+<h3>
+<a id="access-elasticsearch-api" class="anchor" href="#access-elasticsearch-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Access ElasticSearch API</h3>
+
+<p>If you make this http request to the elasticsearch node you should see the logs there. Here's the request (you can access from the HAProxy default page): <a href="http://localhost/elasticsearch/_search?pretty">http://localhost/elasticsearch/_search?pretty</a></p>
+
+<h3>
+<a id="configure-kibana" class="anchor" href="#configure-kibana" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure Kibana</h3>
+
+<ol>
+<li>
+<p>Access the application:</p>
+
+<ul>
+<li>Go to <a href="http://localhost/app/kibana">http://localhost/app/kibana</a> </li>
+<li>You will be redirected to the <b>Configure an index pattern</b> page. </li>
+</ul>
+</li>
+<li>
+<p>Configure an index pattern</p>
+
+<ul>
+<li>In the index name or patter put <b>gelf_logs</b>
+</li>
+<li>After the <b>Time-field name</b> refreshes select <b><a href="https://github.com/timestamp" class="user-mention">@timestamp</a></b> from the dropdown</li>
+<li>Click <b>Create</b>.</li>
+</ul>
+</li>
+<li><p>If you click now on the <b>Discover</b> navigation button you will be able to see same logs that you have seen when you accessed ElasticSearch earlier</p></li>
+</ol>
+
+<h1>
+<a id="getting-started-for-windows" class="anchor" href="#getting-started-for-windows" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting started for windows</h1>
+
+<ol>
+<li>Run prepare.bat</li>
+<li>Open Oracle VM VirtualBox Manager. Right click your docker machine and map a host port (e.g. 8182) to the internal port 80 (the port to which nginx is listening)</li>
+<li>docker-compose -f windows-or-osx/docker-compose.yml up (it will start the containers on your active docker machine) - for linux just use the -f linux/docker-compose.yml</li>
+<li>After the initialization is finished (first time will take about 10 mins for jenkins and 2 mins for nexus maybe because they are downloading and initializing stuff in the specified volumes) you will be able to access Jenkins and Nexus at http://localhost:8182/jenkins and http://localhost:8182/nexus and similar for the others (http://localhost:8182/)</li>
+</ol>
+
+<p>Have fun! :D</p>
 
 <h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
@@ -45,7 +230,7 @@
 <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/eciuca/development-environment-docker">Development-environment-docker</a> is maintained by <a href="https://github.com/eciuca">eciuca</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/eciuca/development-environment-docker">development-environment-docker</a> is maintained by <a href="https://github.com/eciuca">eciuca</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
