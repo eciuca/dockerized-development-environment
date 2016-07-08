@@ -1,4 +1,4 @@
-# dev-env-setup
+# dockerized-development-environment
 A simple and fast way to create a development environment with GoCD, ELK Stack, Nexus 3, HAProxy and Nginx in a Docker Compose script for fast setup.
 
 At the end of this Readme you will have:
