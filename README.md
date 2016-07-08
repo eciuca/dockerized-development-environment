@@ -1,5 +1,12 @@
 # dev-env-setup
-A simple and fast way to create a development environment with Jenkins, Nexus, ELK Stash and Kubernetes.
+A simple and fast way to create a development environment with GoCD, ELK Stack, Nexus 3, HAProxy and Nginx in a Docker Compose script for fast setup.
+
+At the end of this Readme you will have:
+- A GoCD Server with 1 GoCD Agent and 2 pipelines ready to build the dropwizard-seed project
+- A Nexus 3 repository setup with docker and maven repositories
+- An ELK Stack, which captures all logs from the dropwizard-seed project (if started as show in the guide)
+- A HAProxy container for proxying your containers
+- A Nginx instance for serving static content (the default HAProxy page)
 
 # Prerequisites
 - Docker
