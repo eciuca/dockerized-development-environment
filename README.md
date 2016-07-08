@@ -4,7 +4,7 @@ A simple and fast way to create a development environment with GoCD, ELK Stack, 
 At the end of this Readme you will have:
 - A GoCD Server with 1 GoCD Agent and 2 pipelines ready to build the dropwizard-seed project
 - A Nexus 3 repository setup with docker and maven repositories
-- An ELK Stack, which captures all logs from the dropwizard-seed project (if started as show in the guide)
+- An ELK Stack, which captures all logs from the dropwizard-seed project (if started as shown in the guide)
 - A HAProxy container for proxying your containers
 - A Nginx instance for serving static content (the default HAProxy page)
 
@@ -100,7 +100,7 @@ If you go to the <b>Pipelines</b> view you will see the <b>Parent</b> and <b>Dro
 $ docker run -p 8888:8888 --log-driver=gelf --log-opt gelf-address=udp://$(docker inspect --format '{{ .NetworkSettings.Networks.linux_default.IPAddress }}' linux_elk_1):12201 --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" localhost:8444/com.github.eciuca/dropwizard-seed-local
 ```
 
-2. Go to <a target="_blank" href="http://localhost:8888/hello-world/user1">http://localhost:8888/hello-world/user1</a>` and you should see the following message: `Hello, user1!`
+2. Go to <a target="_blank" href="http://localhost:8888/hello-world/user1">http://localhost:8888/hello-world/user1</a> and you should see the following message: `Hello, user1!`
 
 ### Access ElasticSearch API
 
