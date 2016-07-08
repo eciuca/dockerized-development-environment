@@ -4,7 +4,7 @@ A simple and fast way to create a development environment with GoCD, ELK Stack, 
 At the end of this Readme you will have:
 - A GoCD Server with 1 GoCD Agent and 2 pipelines ready to build the dropwizard-seed project
 - A Nexus 3 repository setup with docker and maven repositories
-- An ELK Stack, which captures all logs from the dropwizard-seed project (if started as shown in the guide)
+- An ELK Stack (ElasticSearch, Logstash, Kibana), which captures all logs from the container running an image of the dropwizard-seed project (if started as shown in the guide)
 - A HAProxy container for proxying your containers
 - A Nginx instance for serving static content (the default HAProxy page)
 
