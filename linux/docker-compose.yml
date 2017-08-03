@@ -7,7 +7,7 @@ volumes:
   
 services:
   gocd-server:
-    image: gocd/gocd-server
+    image: gocd/gocd-server:v17.8.0
     ports:
      - "8153:8153"
     volumes:
