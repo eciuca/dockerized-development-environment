@@ -10,21 +10,27 @@ services:
     image: gocd/gocd-server:v17.8.0
     ports:
      - "8153:8153"
+     - "8154:8154"
     volumes:
-     - dev-env-setup-gocd-server-volume:/etc/go
-     - dev-env-setup-gocd-server-volume:/var/lib/go-server
-     - dev-env-setup-gocd-server-volume:/var/log/go-server
+     - dev-env-setup-gocd-server-volume:/godata
+     - dev-env-setup-gocd-server-volume:/home/go
+     - ../go/server/config/cruise-config.xml:/godata/config/cruise-config.xml
   
   gocd-agent-updated:
-    image: eciuca/gocd-agent-jdk8-maven3
+    image: gocd-agent-local
     links:
      - gocd-server:go-server
      - nexus:nexus
     volumes:
-     - dev-env-setup-gocd-agent-volume:/var/lib/go-agent
-     - dev-env-setup-gocd-agent-volume:/var/go
-     - /var/run/docker.sock:/var/run/docker.sock:ro
-     - ../go/agent/settings.xml:/var/go/.m2/settings.xml:ro
+     - dev-env-setup-gocd-agent-volume:/godata
+     - /var/run/docker.sock:/var/run/docker.sock
+     - ../go/agent/settings.xml:/home/go/.m2/settings.xml
+    environment:
+     - GO_SERVER_URL=https://gocd-server:8154/go
+     - AGENT_AUTO_REGISTER_KEY=392ed31e-136e-4d5f-a4d7-d5a4f0cefc21
+     - AGENT_AUTO_REGISTER_RESOURCES=java
+     - AGENT_AUTO_REGISTER_ENVIRONMENTS=Development
+     - AGENT_AUTO_REGISTER_HOSTNAME=Agent01
 
   nexus:
     image: sonatype/nexus3
