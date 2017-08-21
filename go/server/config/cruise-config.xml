@@ -133,10 +133,20 @@
   </templates>
   <environments>
     <environment name="Development">
+      <agents>
+        <physical uuid="58ced9c2-9f35-4edf-b742-b242a377426f" />
+      </agents>
       <pipelines>
         <pipeline name="parent-project" />
         <pipeline name="wg-hello-world" />
       </pipelines>
     </environment>
   </environments>
+  <agents>
+    <agent hostname="Agent01" ipaddress="172.18.0.6" uuid="58ced9c2-9f35-4edf-b742-b242a377426f">
+      <resources>
+        <resource>java</resource>
+      </resources>
+    </agent>
+  </agents>
 </cruise>
