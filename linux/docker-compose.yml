@@ -34,7 +34,7 @@ services:
      - AGENT_AUTO_REGISTER_HOSTNAME=Agent01
 
   nexus:
-    image: sonatype/nexus3
+    image: sonatype/nexus3:3.5.0
     ports:
      - "8081:8081"
      - "8444:8444"
@@ -50,17 +50,17 @@ services:
      - ../nginx/html:/usr/share/nginx/html:ro
 
   haproxy:
-    image: million12/haproxy
+    image: haproxy:1.7.8
     ports:
      - "80:80"
      - "443:443"
     volumes:
-     - ../haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg:ro
+     - ../haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     environment:
-     - GATEWAY_IP=172.17.0.1
+     - GATEWAY_IP=172.18.0.1
 
   elk:
-    image: sebp/elk
+    image: sebp/elk:551
     ports:
      - "5601:5601"
      - "9200:9200"
