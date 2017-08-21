@@ -15,6 +15,7 @@ services:
      - dev-env-setup-gocd-server-volume:/godata
      - dev-env-setup-gocd-server-volume:/home/go
      - ../go/server/config/cruise-config.xml:/godata/config/cruise-config.xml
+     - ../go/server/config/password.properties:/godata/config/password.properties
   
   gocd-agent-updated:
     image: gocd-agent-local
@@ -52,6 +53,7 @@ services:
     image: million12/haproxy
     ports:
      - "80:80"
+     - "443:443"
     volumes:
      - ../haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg:ro
     environment:

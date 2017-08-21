@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="94">
+  <server artifactsdir="artifacts" siteUrl="http://localhost:8153/" secureSiteUrl="https://localhost:8154/" agentAutoRegisterKey="392ed31e-136e-4d5f-a4d7-d5a4f0cefc21" webhookSecret="76c10eaa-957a-4443-a575-3fde2900afd4" commandRepositoryLocation="default" serverId="8e6ab2d9-24ec-4e04-a46f-0fb06cd9581a">
+    <security>
+      <authConfigs>
+        <authConfig id="pass" pluginId="cd.go.authentication.passwordfile">
+          <property>
+            <key>PasswordFilePath</key>
+            <value>/godata/config/password.properties</value>
+          </property>
+        </authConfig>
+      </authConfigs>
+      <admins>
+        <user>admin</user>
+      </admins>
+    </security>
+  </server>
+  <pipelines group="wg">
+    <pipeline name="parent-project" isLocked="false" template="JavaArtifact">
+      <materials>
+        <git url="https://github.com/eciuca/parent.git" />
+      </materials>
+    </pipeline>
+    <pipeline name="wg-hello-world" isLocked="false" template="MicroservicePipeline">
+      <materials>
+        <git url="https://github.com/eciuca/hello-world.git" />
+        <pipeline pipelineName="parent-project" stageName="Build" materialName="parent-updated" />
+      </materials>
+    </pipeline>
+  </pipelines>
+  <templates>
+    <pipeline name="MicroservicePipeline">
+      <stage name="Build">
+        <jobs>
+          <job name="build">
+            <tasks>
+              <exec command="mvn">
+                <arg>clean</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="mvn">
+                <arg>test</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="mvn">
+                <arg>install</arg>
+                <arg>-DskipTests</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="mvn">
+                <arg>capsule:build</arg>
+                <arg>-Pexecutable-capsule</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="mvn">
+                <arg>docker:build</arg>
+                <arg>-Pdocker</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Test">
+        <jobs>
+          <job name="test">
+            <tasks>
+              <exec command="echo">
+                <arg>Testing microservice...</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Deploy">
+        <jobs>
+          <job name="Development">
+            <tasks>
+              <exec command="echo">
+                <arg>Deploy to dev environment</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+          <job name="Staging">
+            <tasks>
+              <exec command="echo">
+                <arg>Deploy to test environment</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Release">
+        <approval type="manual" />
+        <jobs>
+          <job name="Production">
+            <tasks>
+              <exec command="echo">
+                <arg>Deploy to prod environment</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="JavaArtifact">
+      <stage name="Build">
+        <jobs>
+          <job name="build">
+            <tasks>
+              <exec command="mvn">
+                <arg>clean</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="mvn">
+                <arg>test</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="mvn">
+                <arg>install</arg>
+                <arg>-DskipTests</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </templates>
+  <environments>
+    <environment name="Development">
+      <pipelines>
+        <pipeline name="parent-project" />
+        <pipeline name="wg-hello-world" />
+      </pipelines>
+    </environment>
+  </environments>
+</cruise>
