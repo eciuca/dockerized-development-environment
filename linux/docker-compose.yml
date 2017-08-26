@@ -40,7 +40,7 @@ services:
      - "8444:8444"
     volumes:
      - dev-env-setup-nexus-volume:/nexus-data
-     - ../nexus/etc/org.sonatype.nexus.cfg:/opt/sonatype/nexus/etc/org.sonatype.nexus.cfg:ro     
+     - ../nexus/etc/nexus.properties:/nexus-data/etc/nexus.properties:ro
 
   nginx:
     image: nginx
